@@ -1,0 +1,15 @@
+.container {
+  margin: 12px 0;
+  line-height: 1;
+  text-align: center;
+  display: flex;
+  img{
+    height: 64px;
+  }
+  &:hover{
+    cursor: pointer;
+  }
+}
+.logo {
+    
+}
