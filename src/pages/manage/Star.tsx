@@ -2,7 +2,7 @@
  * @Author: qiangyujun qiangyujun@jd.com
  * @Date: 2025-01-27 17:05:59
  * @LastEditors: qiangyujun qiangyujun@jd.com
- * @LastEditTime: 2025-01-28 16:44:07
+ * @LastEditTime: 2025-01-30 12:38:28
  * @FilePath: /project/questionnaire-system/src/pages/manage/Star.tsx
  * @Description: 这是默认设置,请设置`customQuestioaTdpee`, 打开koroFileHeader查看配置 进行设置: https://github.com/OBKoro1/koro1FileHeader/wiki/%E9%85%8D%E7%BD%AE
  */
@@ -11,6 +11,7 @@ import styles from "./common.module.scss";
 import QuestionCard from "@/components/QuestionCard";
 import { Empty } from "antd";
 import { QuestionType } from "./type";
+import ListSearch from "@/components/ListSearch";
 const Star: FC = () => {
   const [questionList] = useState<QuestionType[]>([
     {
@@ -26,7 +27,9 @@ const Star: FC = () => {
         <div className={styles.left}>
           <h3>我的问卷</h3>
         </div>
-        <div className={styles.right}>搜索</div>
+        <div className={styles.right}>
+          <ListSearch />
+        </div>
       </div>
       <div className={styles.content}>
         {questionList.length === 0 && (

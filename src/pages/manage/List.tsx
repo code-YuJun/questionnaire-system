@@ -2,7 +2,7 @@
  * @Author: qiangyujun qiangyujun@jd.com
  * @Date: 2025-01-26 14:59:13
  * @LastEditors: qiangyujun qiangyujun@jd.com
- * @LastEditTime: 2025-01-28 16:44:38
+ * @LastEditTime: 2025-01-30 12:37:53
  * @FilePath: /project/questionnaire-system/src/List.tsx
  * @Description: 问卷列表页
  */
@@ -13,7 +13,7 @@ import styles from "./common.module.scss";
 import { useSearchParams } from "react-router-dom";
 import { useTitle } from "ahooks";
 import { QuestionType } from "./type";
-
+import ListSearch from "@/components/ListSearch";
 const List: FC = () => {
   const [searchParams] = useSearchParams();
   const keyword = searchParams.get("keyword") || "";
@@ -74,7 +74,9 @@ const List: FC = () => {
         <div className={styles.left}>
           <h3>我的问卷</h3>
         </div>
-        <div className={styles.right}>搜索</div>
+        <div className={styles.right}>
+          <ListSearch />
+        </div>
       </div>
       <div className={styles.content}>
         {questionList.length > 0 &&
