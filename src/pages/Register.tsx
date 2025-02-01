@@ -1,17 +1,11 @@
-/*
- * @Author: qiangyujun qiangyujun@jd.com
- * @Date: 2025-01-27 17:03:51
- * @LastEditors: qiangyujun qiangyujun@jd.com
- * @LastEditTime: 2025-01-30 14:42:32
- * @FilePath: /project/questionnaire-system/src/pages/Register.tsx
- * @Description: 注册页面
- */
 import { FC } from "react";
 import { useTitle } from "ahooks";
 import styles from "./Register.module.scss";
 import type { FormProps } from "antd";
-import { Button, Form, Input, Space } from "antd";
-import { Link } from "react-router-dom";
+import { Button, Form, Input, Space, message } from "antd";
+import { Link, useNavigate } from "react-router-dom";
+import { useRequest } from "ahooks";
+import { register } from "../service/user";
 type FieldType = {
   username?: string;
   password?: string;
@@ -20,9 +14,23 @@ type FieldType = {
   nickname?: string;
 };
 const Register: FC = () => {
-  useTitle("注册页面");
+  useTitle("轻问卷-注册");
+  const nav = useNavigate();
+  const { run: registerRun } = useRequest(
+    async (values: FieldType) => {
+      const { username, password, nickname } = values;
+      await register(username, password, nickname);
+    },
+    {
+      manual: true,
+      onSuccess: () => {
+        message.success("注册成功");
+        nav("/login");
+      },
+    }
+  );
   const onFinish: FormProps<FieldType>["onFinish"] = (values) => {
-    console.log("Success:", values);
+    registerRun(values);
   };
 
   const onFinishFailed: FormProps<FieldType>["onFinishFailed"] = (
@@ -32,7 +40,7 @@ const Register: FC = () => {
   };
   return (
     <div className={styles.container}>
-      <h3 className={styles.title}>用户注册</h3>
+      <h2 className={styles.title}>注册</h2>
       <div className={styles.form}>
         <Form
           name="basic"

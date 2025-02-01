@@ -1,11 +1,3 @@
-/*
- * @Author: qiangyujun qiangyujun@jd.com
- * @Date: 2025-01-27 17:24:11
- * @LastEditors: qiangyujun qiangyujun@jd.com
- * @LastEditTime: 2025-01-30 13:38:53
- * @FilePath: /project/questionnaire-system/src/router/index.tsx
- * @Description: 页面路由
- */
 import { createBrowserRouter } from "react-router-dom";
 import MainLayout from "@/layout/MainLayout";
 import ManageLayout from "@/layout/ManageLayout";
@@ -27,11 +19,11 @@ const router = createBrowserRouter([
     children: [
       {
         path: "/",
-        element: <Home />,
+        element: <Home />, // 首页
       },
       {
         path: "login",
-        element: <Login />,
+        element: <Login />, // 登录
       },
       {
         path: "register",

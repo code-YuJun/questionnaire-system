@@ -1,54 +1,46 @@
-/*
- * @Author: qiangyujun qiangyujun@jd.com
- * @Date: 2025-01-27 17:03:19
- * @LastEditors: qiangyujun qiangyujun@jd.com
- * @LastEditTime: 2025-01-30 14:46:04
- * @FilePath: /project/questionnaire-system/src/pages/Login.tsx
- * @Description: 登录页
- */
 import { FC, useEffect } from "react";
 import styles from "./Login.module.scss";
 import type { FormProps } from "antd";
-import { Button, Form, Input, Space, Checkbox } from "antd";
-import { Link } from "react-router-dom";
-import { useTitle } from "ahooks";
+import { Button, Form, Input, Space, Checkbox, message } from "antd";
+import { Link, useNavigate } from "react-router-dom";
+import { useTitle, useRequest } from "ahooks";
+import { login } from "../service/user";
+import { setToken } from "../utils";
 type FieldType = {
   username?: string;
   password?: string;
   remember?: boolean;
 };
+
+// 用户名、密码
 const USERNAME_KEY = "USERNAME";
 const PASSWORD_KEY = "PASSWORD";
 
-function rememberUserInfo(values: FieldType) {
-  localStorage.setItem(USERNAME_KEY, values.username || "");
-  localStorage.setItem(PASSWORD_KEY, values.password || "");
+// 记住用户信息
+function rememberUserInfo(username: string, password: string) {
+  localStorage.setItem(USERNAME_KEY, username);
+  localStorage.setItem(PASSWORD_KEY, password);
 }
+
+// 删除用户信息
 function deleteUserInfo() {
   localStorage.removeItem(USERNAME_KEY);
   localStorage.removeItem(PASSWORD_KEY);
 }
+
+// 获取用户信息
 function getUserInfo() {
   return {
     username: localStorage.getItem(USERNAME_KEY),
     password: localStorage.getItem(PASSWORD_KEY),
   };
 }
+
 const Login: FC = () => {
-  useTitle("登录页面");
-  const onFinish: FormProps<FieldType>["onFinish"] = (values) => {
-    if (values.remember) {
-      rememberUserInfo(values);
-    } else {
-      deleteUserInfo();
-    }
-  };
-  const onFinishFailed: FormProps<FieldType>["onFinishFailed"] = (
-    errorInfo
-  ) => {
-    console.log("Failed:", errorInfo);
-  };
+  useTitle("轻问卷-登录");
+  const nav = useNavigate();
   const [form] = Form.useForm();
+  // 判断本地是否有过存储
   useEffect(() => {
     const { username, password } = getUserInfo();
     form.setFieldsValue({
@@ -56,9 +48,42 @@ const Login: FC = () => {
       password,
     });
   }, []);
+
+  // 登录请求逻辑
+  const { run: loginRun } = useRequest(
+    (username: string, password: string) => login(username, password),
+    {
+      manual: true,
+      onSuccess: (res) => {
+        const { token = "" } = res;
+        setToken(token);
+        // 登录成功
+        message.success("登录成功");
+        nav("/manage/list");
+      },
+      onError: (error) => {
+        message.error(error.message);
+      },
+    }
+  );
+
+  const onFinish: FormProps<FieldType>["onFinish"] = (values) => {
+    const { username, password, remember } = values;
+    if (remember) {
+      rememberUserInfo(username, password);
+    } else {
+      deleteUserInfo();
+    }
+    loginRun(username, password);
+  };
+  const onFinishFailed: FormProps<FieldType>["onFinishFailed"] = (
+    errorInfo
+  ) => {
+    message.error(errorInfo.errorFields[0].errors[0]);
+  };
   return (
     <div className={styles.container}>
-      <h3 className={styles.title}>用户登录</h3>
+      <h2 className={styles.title}>登录</h2>
       <div className={styles.form}>
         <Form
           form={form}

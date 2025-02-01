@@ -1,4 +1,4 @@
-import React, { FC } from "react";
+import { FC } from "react";
 import styles from "./ManageLayout.module.scss";
 import { Outlet, useNavigate, useLocation } from "react-router-dom";
 import { Button, Space, Divider } from "antd";
